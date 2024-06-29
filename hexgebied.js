@@ -705,7 +705,7 @@ function createArea() {
             neighBours.forEach(neighbour => {
                 if (neighbour.extra === undefined) {
                     neighbour.extra = {
-                        name: translate('monster_village'),
+                        name: 'monster_village',
                         resident: 'monster',
                         type: 'danger'
                     };
