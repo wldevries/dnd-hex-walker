@@ -639,7 +639,7 @@ const translations = {
         continental: "Continentaal",
         coral_reef: "Koraalrif",
         demonic_hole: "Demonisch Gat",
-        desert: "Desert",
+        desert: "Woestijn",
         druid_circle: "Druïde Cirkel",
         evil_temple: "Slechte Tempel",
         forest: "Bos",
