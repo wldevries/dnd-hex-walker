@@ -600,6 +600,7 @@ const translations = {
         monster_village: "Monster Dorp",
         mountain: "Berg",
         oasis: "Oase",
+        polar: "Pool",
         port: "Haven",
         resident_safe: "bewoond",
         resident_monster: "monster",
@@ -712,7 +713,7 @@ function createArea() {
                 }
                 else if (neighbour.extra.resident === 'safe') {
                     neighbour.extra.resident = undefined;
-                    neighbour.extra.name += ' (ruin)'; 
+                    neighbour.extra.ruin = true;
                 }
             });
         }
