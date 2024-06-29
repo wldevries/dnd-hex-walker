@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex walker</title>
+    <script src="hexgebied.js"></script>
+</head>
+
+<body>
+
+<h1>Hello hex walkers!</h1>
+<div>
+    <span>Create a hex area of type</span>
+    <select id="environmentSelect" title="environment">
+        <option value="random">Random</option>
+        <option value="desert">Desert</option>
+        <option value="sea">Sea</option>
+        <option value="temperate">Temperate</option>
+        <option value="continental">Continental</option>
+        <option value="tropical">Tropical</option>
+        <option value="polar">Polar</option>
+    </select>
+    <button onclick="drawHex()">Create</button>
+</div>
+<div id="hex"></div>
+</body>
+
+</html>
