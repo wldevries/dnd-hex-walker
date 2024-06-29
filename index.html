@@ -7,15 +7,23 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="hexgebied.js"></script>
     <style>
-        .tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px;
-            font-size: 12px;
-            pointer-events: none; /* Ensure the tooltip does not block mouse events */
-            display: none; /* Initially hide the tooltip */
-        }
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    font-size: 12px;
+    pointer-events: none; /* Ensure the tooltip does not block mouse events */
+    display: none; /* Initially hide the tooltip */
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-block-start: 1em;
+}
+#hex-details {
+    margin-inline-start: 1em;
+}
     </style>
 </head>
 <body>
@@ -37,9 +45,9 @@
     <button onclick="drawHex()">Create</button>
 </div>
 
-<div>
+<div class="container">
     <svg id="hex-svg"></svg>
-    <div id="hex"></div>
+    <div id="hex-details"></div>
 </div>
 
 </body>

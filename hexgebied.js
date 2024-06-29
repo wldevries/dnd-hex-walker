@@ -958,7 +958,7 @@ function tileTooltip(tile) {
 }
 
 function printArea(area) {
-    const hex = document.getElementById('hex');
+    const hex = document.getElementById('hex-details');
     hex.innerHTML = '';
 
     const header = document.createElement('h3');
