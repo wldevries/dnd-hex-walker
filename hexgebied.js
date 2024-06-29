@@ -738,7 +738,8 @@ function getNeighbours(index, tiles) {
     }
     function addFromIndex(index) {
         const tile = tiles.find(tile => tile.index === index);
-        result.push(tile);
+        if (tile !== undefined)
+            result.push(tile);
     }
     return result;
 }
@@ -932,8 +933,14 @@ function svgArea(area) {
     tiles.append("polygon")
         .attr("points", hexString)
         .attr("stroke", "#403225")
+        .attr("fill", d => d.color)
+        .attr("stroke-width", 0)
+        .attr("opacity", 0)
+        .attr("transform", d => `translate(0,-${5*tileSide}) rotate(-10 0 ${tileSide})`)
+        .transition().delay(d => (d.index - 1) / 19 * 400).duration(1500)
         .attr("stroke-width", 4)
-        .attr("fill", d => d.color);
+        .attr("opacity", 1)
+        .attr("transform", "translate(0,0)");
 
     tiles.append("text")
         .html(d => {
@@ -959,7 +966,10 @@ function svgArea(area) {
         .attr("font-weight", "bold")
         .attr("text-anchor", "middle") // center horizontally
         .attr("dominant-baseline", "middle") // center vertically
-        .attr("fill", d => getReadableColor(d.color));
+        .attr("fill", d => getReadableColor(d.color))
+        .attr("opacity", 0)
+        .transition().delay(d => 1000 + (d.index - 1) / 19 * 400).duration(1000)
+        .attr("opacity", 1);
 
     return svg.node();
 }
