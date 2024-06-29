@@ -821,8 +821,27 @@ function drawHex() {
     printArea(area);
 }
 
-function svgArea(area) {
-    const tileSide = 80; // is radius
+function decideTileSide() {
+    const maxTileWidth = window.innerWidth;
+
+    let tileSide = 80; // Initial tile side (radius)
+    while (true) {
+        const tileWidth = 2 * tileSide;
+        const tileXIncrement = tileWidth - (tileWidth - tileSide) / 2;
+        const width = 5 * tileXIncrement + tileWidth - tileXIncrement + tileWidth / 2;
+
+        if (width <= maxTileWidth || tileSide <= 1) {
+            break; // Exit loop when width is within acceptable range or tile size cannot be reduced further
+        }
+
+        tileSide--; // Decrease tile side to fit within maxTileWidth
+    }
+    return tileSide;
+}
+
+
+function svgArea(area) {    
+    const tileSide = decideTileSide(); // is radius
     const tileHeight = Math.sqrt(3) * tileSide;
     const tileWidth = 2 * tileSide;
     const tileXIncrement = tileWidth - (tileWidth - tileSide) / 2

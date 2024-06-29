@@ -6,43 +6,27 @@
     <title>Hex walker</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="hexgebied.js"></script>
-    <style>
-.tooltip {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px;
-    font-size: 12px;
-    pointer-events: none; /* Ensure the tooltip does not block mouse events */
-    display: none; /* Initially hide the tooltip */
-}
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    margin-block-start: 1em;
-}
-#hex-details {
-    margin-inline-start: 1em;
-}
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="tooltip" id="tooltip"></div>
 
-<h1>Hello hex walkers!</h1>
-<div>
-    <span>Create a hex area of type</span>
-    <select id="environmentSelect" title="environment">
-        <option value="random">Random</option>
-        <option value="desert">Desert</option>
-        <option value="sea">Sea</option>
-        <option value="temperate">Temperate</option>
-        <option value="continental">Continental</option>
-        <option value="tropical">Tropical</option>
-        <option value="polar">Polar</option>
-    </select>
-    <button onclick="drawHex()">Create</button>
+<div class="header">
+    <h1>Hello hex walkers!</h1>
+    <div>
+        <span>Create a hex area of type</span>
+        <select id="environmentSelect" title="environment">
+            <option value="random">Random</option>
+            <option value="desert">Desert</option>
+            <option value="sea">Sea</option>
+            <option value="temperate">Temperate</option>
+            <option value="continental">Continental</option>
+            <option value="tropical">Tropical</option>
+            <option value="polar">Polar</option>
+        </select>
+        <button onclick="drawHex()">Create</button>
+    </div>
 </div>
 
 <div class="container">
