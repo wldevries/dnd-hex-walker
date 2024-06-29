@@ -4,10 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hex walker</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="hexgebied.js"></script>
+    <style>
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px;
+            font-size: 12px;
+            pointer-events: none; /* Ensure the tooltip does not block mouse events */
+            display: none; /* Initially hide the tooltip */
+        }
+    </style>
 </head>
-
 <body>
+
+<div class="tooltip" id="tooltip"></div>
 
 <h1>Hello hex walkers!</h1>
 <div>
@@ -23,7 +36,12 @@
     </select>
     <button onclick="drawHex()">Create</button>
 </div>
-<div id="hex"></div>
+
+<div>
+    <svg id="hex-svg"></svg>
+    <div id="hex"></div>
+</div>
+
 </body>
 
 </html>

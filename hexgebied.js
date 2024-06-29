@@ -7,7 +7,7 @@ const dict = {
         'tropical',
         'polar'
     ],
-    
+
     desert: {
         terrain: {
             2: { name: 'oasis', extra: 'attraction', next: 9 },
@@ -71,7 +71,7 @@ const dict = {
             4: { name: 'monster_village', resident: 'monster' },
             5: { name: 'mage_tower' },
             6: { name: 'evil_temple' },
-            7: { name: 'ruine', resident: 'monster' },
+            7: { name: 'ruin', resident: 'monster' },
             8: { name: 'monster_cave', resident: 'monster' },
             9: { name: 'hex_walker_ruin_gigantic', resident: 'monster' },
             10: { name: 'hex_walker_ruin_gigantic', resident: 'monster' },
@@ -265,7 +265,7 @@ const dict = {
             12: { name: 'demonic_hole', resident: 'monster', infect: true },
         },
     },
-    
+
     continental: {
         terrain: {
             2: { name: 'tundra' },
@@ -352,7 +352,7 @@ const dict = {
         },
     },
 
-        
+
     tropical: {
         terrain: {
             2: { name: 'volcano' },
@@ -438,7 +438,7 @@ const dict = {
             12: { name: 'demonic_hole', resident: 'monster', infect: true },
         },
     },
-        
+
     polar: {
         terrain: {
             2: { name: 'forest_pine' },
@@ -490,7 +490,7 @@ const dict = {
             6: { name: 'tower' },
             7: { name: 'tent_camp' },
             8: { name: 'misc_safe' },
-            9: { name : 'temple' },
+            9: { name: 'temple' },
             10: { name: 'druid_circle' },
             11: { name: 'mage_tower' },
             12: { name: 'mage_tower' },
@@ -526,6 +526,72 @@ const dict = {
     },
 };
 
+const baseColors = {
+    desert: '#F0E68C',         // Khaki
+    sea: '#1E90FF',            // Dodger Blue
+    temperate: '#008000',      // Green (adjust as needed)
+    continental: '#CD853F',    // Peru
+    tropical: '#32CD32',       // Lime Green
+    polar: '#87CEEB'           // Sky Blue
+};
+
+const terrainColors = {
+    atoll: '#00FFFF',          // Cyan
+    cave_system: '#663300',    // Brown
+    coral_reef: '#FF7F50',     // Coral
+    desert: '#F0E68C',         // Khaki
+    forest: '#228B22',         // Forest Green
+    forest_pine: '#2E8B57',    // Sea Green
+    geyser: '#F5F5DC',         // Beige
+    gletscher: '#B0C4DE',      // Light Steel Blue
+    grassland: '#7CFC00',      // Lawn Green
+    island: '#FFD700',         // Gold
+    lake: '#ADD8E6',           // Light Blue
+    mesa: '#D2691E',           // Chocolate
+    mountain: '#808080',       // Gray
+    oasis: '#32CD32',          // Lime Green
+    rainforest: '#228B22',     // Forest Green (same as 'forest')
+    ravine: '#8B4513',         // Saddle Brown
+    rocks: '#A9A9A9',          // Dark Gray
+    salt_flats: '#F5F5DC',     // Beige (same as 'geyser')
+    sand_dune: '#DEB887',      // Burly Wood
+    savanna: '#D2B48C',        // Tan
+    sea: '#1E90FF',            // Dodger Blue
+    swamp: '#8FBC8F',          // Dark Sea Green
+    tundra: '#87CEEB',         // Sky Blue
+    volcano: '#FF4500',        // Orange Red
+    water: '#6495ED',          // Cornflower Blue
+    whirlpool: '#00BFFF'       // Deep Sky Blue
+};
+
+const locationEmojis = {
+    cave: '🕳️',
+    city_castle: '🏰',
+    city_mine: '⛏️',
+    city_temple: '⛩️',
+    demonic_hole: '🌀',
+    druid_circle: '🌳',
+    evil_temple: '👹',
+    hex_walker_ruin: '🏛️',
+    hex_walker_ruin_gigantic: '🏛️🌲',
+    mage_tower: '🧙‍♂️',
+    magical_mist: '💫',
+    magical_obelisk: '🗿',
+    magical_sandstorm: '🌪️',
+    market_place_with_water_well: '🛒🌊',
+    mine: '⛏️',
+    misc_safe: '🏯',
+    monster_cave: '👹🕳️',
+    monster_cave_system: '👹🕳️',
+    monster_city: '👹🏙️',
+    monster_nest: '👹🏚️',
+    monster_village: '👹🏘️',
+    port: '⚓',
+    ruin: '🏚️',
+    temple: '⛩️',
+    tent_camp: '⛺',
+    tower: '🗼'
+};
 const translations = {
     'en': {
         atoll: "Atoll",
@@ -602,14 +668,14 @@ const translations = {
         oasis: "Oase",
         polar: "Pool",
         port: "Haven",
-        resident_safe: "bewoond",
-        resident_monster: "monster",
+        resident_safe: "Bewoond",
+        resident_monster: "Monster aanwezig",
         rainforest: "Regenwoud",
         ravine: "Ravijn",
         rocks: "Rotsen",
         ruin: "Ruïne",
         salt_flats: "Zoutvlakte",
-        sand_dune: "Zandduin",        
+        sand_dune: "Zandduin",
         savanna: "Savanne",
         sea: "Zee",
         swamp: "Moeras",
@@ -625,15 +691,7 @@ const translations = {
     },
 }
 
-const areaTiles = [
-    [9, 10, 11],
-    [8, 2, 3, 12],
-    [19, 7, 1, 4, 13],
-    [18, 6, 5, 14],
-    [17, 16, 15]
-]
-
-function getEnvironment(){
+function getEnvironment() {
     const sel = document.getElementById('environmentSelect');
     if (sel === undefined || sel.value === undefined || sel.value === 'random')
         return dict.environment[rollD6() - 1];
@@ -641,6 +699,13 @@ function getEnvironment(){
 }
 
 function getNeighbours(index, tiles) {
+    const areaTiles = [
+        [9, 10, 11],
+        [8, 2, 3, 12],
+        [19, 7, 1, 4, 13],
+        [undefined, 18, 6, 5, 14],
+        [undefined, undefined, 17, 16, 15]
+    ]
     let result = [];
     let row = areaTiles.findIndex(row => row.includes(index));
     let col = areaTiles[row].findIndex(tile => tile === index);
@@ -679,7 +744,7 @@ function getNeighbours(index, tiles) {
 }
 
 function createArea() {
-    const environmentName = getEnvironment();    
+    const environmentName = getEnvironment();
     const environment = dict[environmentName];
 
     const result = {
@@ -688,7 +753,7 @@ function createArea() {
     };
 
     let terrainIndex = rollDice();
-    let tileNumber = 0;  
+    let tileNumber = 0;
     while (result.tiles.length < 19) {
         if (tileNumber > 1) {
             const tur = environment.tur[rollDice()];
@@ -729,7 +794,7 @@ function createTile(environment, tileNumber, terrainIndex, danger) {
         index: (tileNumber + 1),
         name: terrain.name
     };
-    
+
     let extra;
     if (terrain.extra === 'danger' || danger) {
         if (tileNumber < 7)
@@ -751,9 +816,150 @@ function createTile(environment, tileNumber, terrainIndex, danger) {
 }
 
 function drawHex() {
+    const area = createArea();
+    svgArea(area);
+    printArea(area);
+}
+
+function svgArea(area) {
+    const tileSide = 80; // is radius
+    const tileHeight = Math.sqrt(3) * tileSide;
+    const tileWidth = 2 * tileSide;
+    const tileXIncrement = tileWidth - (tileWidth - tileSide) / 2
+
+    const margin = { top: tileHeight / 4, bottom: tileHeight / 4, left: tileWidth / 4, right: tileWidth / 4 };
+
+    const width = 5 * tileXIncrement + tileWidth - tileXIncrement;
+    const height = 5 * tileHeight;
+
+    const svg = d3.select("#hex-svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
+
+    svg.append("rect")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("fill", baseColors[area.environment]);
+
+    const g = svg.append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const areaTiles = area.tiles
+        .map(t => {
+            const rc = getRowCol(t.index);
+            return {
+                index: t.index,
+                name: t.name,
+                extra: t.extra,
+                row: rc.row,
+                col: rc.col,
+                x: getX(rc.row, rc.col),
+                y: getY(rc.row, rc.col),
+                color: terrainColors[t.name],
+            };
+        });
+
+    function getX(row, col) {
+        const xOffset = d3.scaleLinear()
+            .domain([0, 4])
+            .range([2 * tileXIncrement, -2 * tileXIncrement]);
+
+        const xTranslate = d3.scaleLinear()
+            .domain([0, 4])
+            .range([0, 4 * tileXIncrement]);
+
+        return xOffset(row) + xTranslate(col);
+    }
+
+    function getY(row, col) {
+        const yOffset = d3.scaleLinear()
+            .domain([0, 4])
+            .range([0 * tileHeight, 2 * tileHeight]);
+
+        const yTranslate = d3.scaleLinear()
+            .domain([0, 4])
+            .range([0, 2 * tileHeight]);
+
+        return yOffset(col) + yTranslate(row);
+    }
+
+    const tiles = g.append("g")
+        .selectAll("g")
+        .data(areaTiles)
+        .join("g")
+        .attr("transform", d => `translate(${d.x + tileWidth / 2}, ${d.y + tileHeight / 2})`)
+        .on("mouseover", function (event, d) {
+            // Show the tooltip
+            tooltip.style("display", "block")
+                .html(`${tileTooltip(d)}`) // Example tooltip content
+                .style("left", (event.pageX + 10) + "px") // Position tooltip slightly to the right of the cursor
+                .style("top", (event.pageY - 20) + "px"); // Position tooltip slightly above the cursor
+        })
+        .on("mousemove", function (event) {
+            // Update tooltip position as the mouse moves
+            tooltip.style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 20) + "px");
+        })
+        .on("mouseout", function () {
+            // Hide the tooltip on mouseout
+            tooltip.style("display", "none");
+        });
+
+    const hexPoints = hexagonPoints(0, 0, tileSide);
+    const hexString = hexPoints.map(p => p.join(",")).join(" ");
+
+    const tooltip = d3.select("#tooltip");
+
+    tiles.append("polygon")
+        .attr("points", hexString)
+        .attr("stroke", "#403225")
+        .attr("stroke-width", 4)
+        .attr("fill", d => d.color);
+
+    tiles.append("text")
+        .html(d => {
+            let lines = [translate(d.name)];
+            if (d.extra !== undefined) {
+                lines = [locationEmojis[d.extra.name], ...lines];
+                // if (d.extra.type === 'danger') {
+                //     // lines = ['💀', ...lines];
+                //     lines = ['💀', ...lines];
+                // }
+                // if (d.extra.type === 'attraction') {
+                //     lines = ['🏰', ...lines];
+                // }
+                // if (d.extra.resident === "monster") {
+                //     lines = [...lines, '🐉'];
+                // }
+                // if (d.extra.resident === "safe") {
+                //     lines = [...lines, '👨‍👩'];
+                // }
+            }
+            return lines.map((v, i) => `<tspan>${v}</tspan>`).join('');
+        })
+        .attr("font-weight", "bold")
+        .attr("text-anchor", "middle") // center horizontally
+        .attr("dominant-baseline", "middle") // center vertically
+        .attr("fill", d => getReadableColor(d.color));
+
+    return svg.node();
+}
+
+function tileTooltip(tile) {
+    let text = "Tile index #" + tile.index + "</br>";
+    text += "Terrein: " + translate(tile.name);
+    if (tile.extra !== undefined) {
+        text += "</br>" + translate(tile.extra.name);
+        if (tile.extra.resident !== undefined) {
+            text += "</br>" + translate('resident_' + tile.extra.resident);
+        }
+    }
+    return text;
+}
+
+function printArea(area) {
     const hex = document.getElementById('hex');
     hex.innerHTML = '';
-    const area = createArea();
 
     const header = document.createElement('h3');
     header.textContent = 'Environment: ' + translate(area.environment);
@@ -767,7 +973,7 @@ function drawHex() {
             if (tile.extra.resident !== undefined) {
                 div.textContent += ' (' + translate('resident_' + tile.extra.resident) + ')';
             }
-            
+
             if (tile.extra.infect) {
                 div.style.backgroundColor = 'red';
             }
@@ -783,7 +989,7 @@ function drawHex() {
 }
 
 function translate(key) {
-    let text    
+    let text
 
     text = translations.nl[key];
     if (text !== undefined) {
@@ -794,8 +1000,87 @@ function translate(key) {
     // if (text !== undefined) {
     //     return text;
     // }
-    
+
     return '_' + key + '_';
+}
+
+function getRowCol(index) {
+    const areaTileLocations = [
+        [9, 10, 11],
+        [8, 2, 3, 12],
+        [19, 7, 1, 4, 13],
+        [undefined, 18, 6, 5, 14],
+        [undefined, undefined, 17, 16, 15]
+    ]
+    const row = areaTileLocations.findIndex(r => r.includes(index));
+    if (row == -1)
+        return undefined;
+    const col = areaTileLocations[row].findIndex(col => col === index);
+    return { row: row, col: col };
+}
+
+function getReadableColor(bgColor) {
+    // Convert hex color to RGB components
+    const hexToRgb = (hex) => {
+        const bigint = parseInt(hex.substring(1), 16);
+        return {
+            r: (bigint >> 16) & 255,
+            g: (bigint >> 8) & 255,
+            b: bigint & 255
+        };
+    };
+
+    // Calculate relative luminance according to W3C formula
+    const getLuminance = (rgb) => {
+        const { r, g, b } = rgb;
+        const sRGB = (c) => {
+            c /= 255;
+            return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        };
+        return 0.2126 * sRGB(r) + 0.7152 * sRGB(g) + 0.0722 * sRGB(b);
+    };
+
+    // Get RGB components of background color
+    const rgb = hexToRgb(bgColor);
+
+    // Calculate background luminance
+    const bgLuminance = getLuminance(rgb);
+
+    // Threshold for deciding between black and white text
+    const threshold = 0.5;
+
+    // Determine which text color (black or white) has better contrast
+    return bgLuminance > threshold ? '#000000' : '#FFFFFF';
+}
+
+function getRandomColor() {
+    // Randomly choose between green and brown
+    const isGreen = Math.random() < 0.5;
+
+    if (isGreen) {
+        // Generate a random shade of green
+        const r = Math.floor(Math.random() * 100); // 0 to 99
+        const g = Math.floor(Math.random() * 156) + 100; // 100 to 255
+        const b = Math.floor(Math.random() * 100); // 0 to 99
+        return `rgb(${r},${g},${b})`;
+    } else {
+        // Generate a random shade of brown
+        const r = Math.floor(Math.random() * 56) + 100; // 100 to 155
+        const g = Math.floor(Math.random() * 56) + 50; // 50 to 105
+        const b = Math.floor(Math.random() * 56); // 0 to 55
+        return `rgb(${r},${g},${b})`;
+    }
+}
+
+function hexagonPoints(centerX, centerY, radius) {
+    const angle = Math.PI / 3;
+    const points = [];
+    for (let i = 0; i < 6; i++) {
+        const x = centerX + radius * Math.cos(angle * i);
+        const y = centerY + radius * Math.sin(angle * i);
+        points.push([x, y]);
+    }
+    return points;
 }
 
 function rollDice() {
