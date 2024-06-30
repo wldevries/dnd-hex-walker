@@ -67,6 +67,14 @@ const tur = {
     12: { offset: 0, extra: "danger" }
 };
 
+const tileLocations = [
+    [9, 10, 11],
+    [8, 2, 3, 12],
+    [19, 7, 1, 4, 13],
+    [undefined, 18, 6, 5, 14],
+    [undefined, undefined, 17, 16, 15]
+]
+
 function getEnvironment() {
     const sel = document.getElementById('environmentSelect');
     if (sel === undefined || sel.value === undefined || sel.value === 'random') {
@@ -83,26 +91,26 @@ function getNeighbours(index, tiles) {
         // neighbours on previous row
         if (row > 0) {
             if (col > 0) {
-                addFromIndex(areaTiles[row - 1][col - 1]);
+                addFromIndex(tileLocations[row - 1][col - 1]);
             }
-            if (areaTiles[row - 1].length > col) {
-                addFromIndex(areaTiles[row - 1][col]);
+            if (tileLocations[row - 1].length > col) {
+                addFromIndex(tileLocations[row - 1][col]);
             }
         }
         // neighbours on same row
         if (col > 0) {
-            addFromIndex(areaTiles[row][col - 1]);
+            addFromIndex(tileLocations[row][col - 1]);
         }
-        if (col < areaTiles[row].length - 1) {
-            addFromIndex(areaTiles[row][col + 1]);
+        if (col < tileLocations[row].length - 1) {
+            addFromIndex(tileLocations[row][col + 1]);
         }
         // neighbours on next row
-        if (row < areaTiles.length - 1) {
+        if (row < tileLocations.length - 1) {
             if (col > 1) {
-                addFromIndex(areaTiles[row + 1][col - 1]);
+                addFromIndex(tileLocations[row + 1][col - 1]);
             }
-            if (areaTiles[row + 1].length > col) {
-                addFromIndex(areaTiles[row + 1][col]);
+            if (tileLocations[row + 1].length > col) {
+                addFromIndex(tileLocations[row + 1][col]);
             }
         }
     }
@@ -429,17 +437,10 @@ function printArea(area, divElement) {
 }
 
 function getRowCol(index) {
-    const areaTileLocations = [
-        [9, 10, 11],
-        [8, 2, 3, 12],
-        [19, 7, 1, 4, 13],
-        [undefined, 18, 6, 5, 14],
-        [undefined, undefined, 17, 16, 15]
-    ]
-    const row = areaTileLocations.findIndex(r => r.includes(index));
+    const row = tileLocations.findIndex(r => r.includes(index));
     if (row == -1)
         return undefined;
-    const col = areaTileLocations[row].findIndex(col => col === index);
+    const col = tileLocations[row].findIndex(col => col === index);
     return { row: row, col: col };
 }
 
