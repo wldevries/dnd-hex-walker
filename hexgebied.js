@@ -1062,7 +1062,7 @@ function svgArea(area, hexSvg) {
 
     const tileImageScale = (tileWidth / 500);
     tiles.append("image")
-        .attr("href", d => "/img/" + terrainImage[area.environment + "_" + d.name])
+        .attr("href", d => "img/" + terrainImage[area.environment + "_" + d.name])
         .attr("opacity", 0)
         .attr("transform", d => `translate(${-tileWidth/2},${1*-tileSide-tileHeight/2}) rotate(-10 0 ${tileSide}) scale(${tileImageScale},${tileImageScale})`)
         .transition().ease(ease).delay(d => (d.index - 1) / 19 * 400).duration(1000)
@@ -1072,7 +1072,7 @@ function svgArea(area, hexSvg) {
     const extraImageScale = d3.format(".2f")(tileWidth / 600);    
     tiles.filter(d => d.extra !== undefined && extraImage[d.extra.name] !== undefined)
         .append("image")
-        .attr("href", d => "/img/" + extraImage[d.extra.name])
+        .attr("href", d => "img/" + extraImage[d.extra.name])
         // .attr("transform", d => `translate(${-tileWidth/2},${-tileHeight/2}) scale(${extraImageScale},${extraImageScale})`)
         .attr("transform", d => `scale(${extraImageScale},${extraImageScale})`)
         .attr("opacity", 0)
