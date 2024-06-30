@@ -818,8 +818,21 @@ function createTile(environment, tileNumber, terrainIndex, danger) {
 
 function drawHex() {
     const area = createArea();
-    svgArea(area);
-    printArea(area);
+    const hexList = document.getElementById('hex-list');
+
+    const container = document.createElement('div');
+    container.classList.add('container');
+    const hexSvg= document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    hexSvg.classList.add('hex-svg');
+    const hexDetails = document.createElement('div');
+    hexDetails.classList.add('hex-details');
+
+    container.appendChild(hexSvg);
+    container.appendChild(hexDetails);
+    hexList.prepend(container);
+
+    svgArea(area, hexSvg);
+    printArea(area, hexDetails);
 }
 
 function decideTileSide() {
@@ -841,7 +854,7 @@ function decideTileSide() {
 }
 
 
-function svgArea(area) {    
+function svgArea(area, hexSvg) {    
     const tileSide = decideTileSide(); // is radius
     const tileHeight = Math.sqrt(3) * tileSide;
     const tileWidth = 2 * tileSide;
@@ -852,9 +865,12 @@ function svgArea(area) {
     const width = 5 * tileXIncrement + tileWidth - tileXIncrement;
     const height = 5 * tileHeight;
 
-    const svg = d3.select("#hex-svg")
+    const svg = d3.select(hexSvg)
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
+
+    // Remove the previously generated hex area
+    svg.selectAll("*").remove();
 
     svg.append("rect")
         .attr("width", width + margin.left + margin.right)
@@ -903,8 +919,7 @@ function svgArea(area) {
         return yOffset(col) + yTranslate(row);
     }
 
-    const tiles = g.append("g")
-        .selectAll("g")
+    const tiles = g.selectAll("g")
         .data(areaTiles)
         .join("g")
         .attr("transform", d => `translate(${d.x + tileWidth / 2}, ${d.y + tileHeight / 2})`)
@@ -986,13 +1001,12 @@ function tileTooltip(tile) {
     return text;
 }
 
-function printArea(area) {
-    const hex = document.getElementById('hex-details');
-    hex.innerHTML = '';
+function printArea(area, divElement) {
+    divElement.innerHTML = '';
 
     const header = document.createElement('h3');
     header.textContent = 'Environment: ' + translate(area.environment);
-    hex.appendChild(header);
+    divElement.appendChild(header);
 
     area.tiles.forEach(tile => {
         const div = document.createElement('div');
@@ -1013,7 +1027,7 @@ function printArea(area) {
                 div.style.backgroundColor = 'orange';
             }
         }
-        hex.appendChild(div);
+        divElement.appendChild(div);
     });
 }
 
