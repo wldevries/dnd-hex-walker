@@ -352,7 +352,6 @@ const dict = {
         },
     },
 
-
     tropical: {
         terrain: {
             2: { name: 'volcano' },
@@ -592,6 +591,75 @@ const locationEmojis = {
     tent_camp: '⛺',
     tower: '🗼'
 };
+
+const extraImage = {
+    cave: "Grot.png",
+    city_castle: "Dorp.png",
+    city_mine: "Dorp.png",
+    city_temple: "Dorp.png",
+    demonic_hole: "monster nest.png",
+    druid_circle: "Druid.png",
+    evil_temple: "Tempel.png",
+    hex_walker_ruin: "Ruine.png",
+    hex_walker_ruin_gigantic: "Ruine.png",
+    magical_obelisk: "Obelisk.png",
+    mage_tower: "Uitkijktoren.png",
+    misc_safe: "Uitkijktoren.png",
+    monster_cave: "monster nest.png",
+    monster_cave_system: "monster nest.png",
+    monster_city: "monster nest.png",
+    monster_nest: "monster nest.png",
+    monster_village: "monster nest.png",
+    ruin: "Ruine.png",
+    temple: "Tempel.png",
+    tower: "Uitkijktoren.png",
+}
+
+const terrainImage = {
+    desert_desert: '1_woestijn.png',
+    desert_mesa: '1_mesa.png',
+    desert_oasis: '1_oase.png',
+    desert_ravine: '1_ravijn.png',
+    desert_salt_flats: '1_zoutvlate.png',
+    desert_sand_dune: '1_zandduin.png',
+    desert_savanna: '1_Savanne.png',
+    sea_atoll: '2_atol.png',
+    sea_coral_reef: '2_koraal.png',
+    sea_island: '2_eiland.png',
+    sea_rocks: '2_rotsen.png',
+    sea_volcano: '2_vulkaan.png',
+    sea_sea: '2_water.png',
+    sea_whirlpool: '2_waterkolk.png',
+    temperate_forest: '3_bos.png',
+    temperate_grassland: '3_gras.png',
+    temperate_lake: '3_meer.png',
+    temperate_mountain: '3_bergen.png',
+    temperate_ravine: '3_ravijn.png',
+    temperate_swamp: '3_moeras.png',
+    temperate_volcano: '3_vulkaan.png',
+    temperate_water: '3_water.png',
+    continental_forest_pine: '4_naaldbos.png',
+    continental_grassland: '3_gras.png',
+    continental_lake: '3_meer.png',
+    continental_mountain: '3_bergen.png',
+    continental_ravine: '3_ravijn.png',
+    continental_tundra: '4_toendra.png',
+    continental_water: '3_water.png',
+    tropical_cave_system: '5_grotten.png',
+    tropical_mountain: '5_bergen.png',
+    tropical_rainforest: '5_regenwoud.png',
+    tropical_swamp: '3_moeras.png',
+    tropical_water: '3_water.png',
+    tropical_volcano: '5_vulkaan.png',
+    polar_forest_pine: '4_naaldbos.png',
+    polar_geyser: '6_geizer.png',
+    polar_gletscher: '6_gletsjer.png',
+    polar_ravine: '3_ravijn.png',
+    polar_tundra: '4_toendra.png',
+    polar_water: '6_ijs.png',
+    polar_mountain: '5_bergen.png',
+}
+
 const translations = {
     'en': {
         atoll: "Atoll",
@@ -869,6 +937,8 @@ function svgArea(area, hexSvg) {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
 
+    const tooltip = d3.select("#tooltip");
+
     // Remove the previously generated hex area
     svg.selectAll("*").remove();
 
@@ -879,6 +949,8 @@ function svgArea(area, hexSvg) {
 
     const g = svg.append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const tileRot = d3.randomNormal(0,1);
 
     const areaTiles = area.tiles
         .map(t => {
@@ -922,6 +994,7 @@ function svgArea(area, hexSvg) {
     const tiles = g.selectAll("g")
         .data(areaTiles)
         .join("g")
+        // .attr("transform", d => `translate(${d.x + tileWidth / 2}, ${d.y + tileHeight / 2}) rotate(${tileRot()})`)
         .attr("transform", d => `translate(${d.x + tileWidth / 2}, ${d.y + tileHeight / 2})`)
         .on("mouseover", function (event, d) {
             // Show the tooltip
@@ -940,58 +1013,78 @@ function svgArea(area, hexSvg) {
             tooltip.style("display", "none");
         });
 
-    const hexPoints = hexagonPoints(0, 0, tileSide);
-    const hexString = hexPoints.map(p => p.join(",")).join(" ");
+    const ease = d3.easeBounceOut; //d3.easeElasticOut.amplitude(0).period(0.3);
 
-    const tooltip = d3.select("#tooltip");
+    // definition for hexagon polygon
+    // const hexPoints = hexagonPoints(0, 0, tileSide);
+    // const hexString = hexPoints.map(p => p.join(",")).join(" ");
 
-    tiles.append("polygon")
-        .attr("points", hexString)
-        .attr("stroke", "#403225")
-        .attr("fill", d => d.color)
-        .attr("stroke-width", 0)
+    // tiles.append("polygon")
+    //     .attr("points", hexString)
+    //     .attr("stroke", "#403225")
+    //     .attr("fill", d => d.color)
+    //     .attr("stroke-width", 0)
+    //     .attr("opacity", 0)
+    //     .attr("transform", d => `translate(0,-${1*tileSide}) rotate(-10 0 ${tileSide})`)
+    //     .transition().ease(ease).delay(d => (d.index - 1) / 19 * 400).duration(1000)
+    //     .attr("stroke-width", 4)
+    //     .attr("opacity", 1)
+    //     .attr("transform", d => `translate(0,0)`);
+
+    // tiles.append("text")
+    //     .html(d => {
+    //         let lines = [translate(d.name)];
+    //         if (d.extra !== undefined) {
+    //             lines = [locationEmojis[d.extra.name], ...lines];
+    //             // if (d.extra.type === 'danger') {
+    //             //     // lines = ['💀', ...lines];
+    //             //     lines = ['💀', ...lines];
+    //             // }
+    //             // if (d.extra.type === 'attraction') {
+    //             //     lines = ['🏰', ...lines];
+    //             // }
+    //             // if (d.extra.resident === "monster") {
+    //             //     lines = [...lines, '🐉'];
+    //             // }
+    //             // if (d.extra.resident === "safe") {
+    //             //     lines = [...lines, '👨‍👩'];
+    //             // }
+    //         }
+    //         return lines.map((v, i) => `<tspan>${v}</tspan>`).join('');
+    //     })
+    //     .attr("font-weight", "bold")
+    //     .attr("text-anchor", "middle") // center horizontally
+    //     .attr("dominant-baseline", "middle") // center vertically
+    //     .attr("fill", d => getReadableColor(d.color))
+    //     .attr("opacity", 0)
+    //     .transition().delay(d => 500 + (d.index - 1) / 19 * 400).duration(1000)
+    //     .attr("opacity", 1);
+
+    const tileImageScale = (tileWidth / 500);
+    tiles.append("image")
+        .attr("href", d => "/img/" + terrainImage[area.environment + "_" + d.name])
         .attr("opacity", 0)
-        .attr("transform", d => `translate(0,-${5*tileSide}) rotate(-10 0 ${tileSide})`)
-        .transition().delay(d => (d.index - 1) / 19 * 400).duration(1500)
-        .attr("stroke-width", 4)
+        .attr("transform", d => `translate(${-tileWidth/2},${1*-tileSide-tileHeight/2}) rotate(-10 0 ${tileSide}) scale(${tileImageScale},${tileImageScale})`)
+        .transition().ease(ease).delay(d => (d.index - 1) / 19 * 400).duration(1000)
         .attr("opacity", 1)
-        .attr("transform", "translate(0,0)");
+        .attr("transform", d => `translate(${-tileWidth/2},${-tileHeight/2}) scale(${tileImageScale},${tileImageScale})`);
 
-    tiles.append("text")
-        .html(d => {
-            let lines = [translate(d.name)];
-            if (d.extra !== undefined) {
-                lines = [locationEmojis[d.extra.name], ...lines];
-                // if (d.extra.type === 'danger') {
-                //     // lines = ['💀', ...lines];
-                //     lines = ['💀', ...lines];
-                // }
-                // if (d.extra.type === 'attraction') {
-                //     lines = ['🏰', ...lines];
-                // }
-                // if (d.extra.resident === "monster") {
-                //     lines = [...lines, '🐉'];
-                // }
-                // if (d.extra.resident === "safe") {
-                //     lines = [...lines, '👨‍👩'];
-                // }
-            }
-            return lines.map((v, i) => `<tspan>${v}</tspan>`).join('');
-        })
-        .attr("font-weight", "bold")
-        .attr("text-anchor", "middle") // center horizontally
-        .attr("dominant-baseline", "middle") // center vertically
-        .attr("fill", d => getReadableColor(d.color))
+    const extraImageScale = d3.format(".2f")(tileWidth / 600);    
+    tiles.filter(d => d.extra !== undefined && extraImage[d.extra.name] !== undefined)
+        .append("image")
+        .attr("href", d => "/img/" + extraImage[d.extra.name])
+        // .attr("transform", d => `translate(${-tileWidth/2},${-tileHeight/2}) scale(${extraImageScale},${extraImageScale})`)
+        .attr("transform", d => `scale(${extraImageScale},${extraImageScale})`)
         .attr("opacity", 0)
-        .transition().delay(d => 1000 + (d.index - 1) / 19 * 400).duration(1000)
+        .transition().delay(d => 500 + (d.index - 1) / 19 * 400).duration(1000)
         .attr("opacity", 1);
 
     return svg.node();
 }
 
 function tileTooltip(tile) {
-    let text = "Tile index #" + tile.index + "</br>";
-    text += "Terrein: " + translate(tile.name);
+    let text = "Tegel " + tile.index;
+    text += "</br>" + translate(tile.name);
     if (tile.extra !== undefined) {
         text += "</br>" + translate(tile.extra.name);
         if (tile.extra.resident !== undefined) {
