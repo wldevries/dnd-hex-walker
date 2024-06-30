@@ -657,7 +657,7 @@ const terrainImage = {
     polar_ravine: '3_ravijn.png',
     polar_tundra: '4_toendra.png',
     polar_water: '6_ijs.png',
-    polar_mountain: '5_bergen.png',
+    polar_mountain: '3_bergen.png',
 }
 
 const translations = {
